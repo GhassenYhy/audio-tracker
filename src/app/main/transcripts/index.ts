@@ -1,0 +1,1 @@
+export { TranscriptModule } from './transcript.module';

@@ -1,0 +1,381 @@
+<h2 class="mt-3 text-dark">
+    Transcripts
+</h2>
+
+<div class="mt-4" *ngIf="transcripts; else loading">
+
+    <!-- ngIf to show and hide-->
+    <div *ngIf="!transcripts.length">
+        <div class="card text-center">
+
+            <ngb-tabset [justify]="currentJustify" #t="ngbTabset">
+                <ngb-tab id="tab-selectbyid1" [disabled]="stepOne">
+                    <ng-template ngbTabTitle>
+                        <b>Step 1 : Start</b>
+                    </ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="card-body">
+                            <h5 class="card-title">Get your first transcript now !</h5>
+                            <p class="card-text">Hello, you currently don't have any transcripts processed.</p>
+                            <div>
+                                <button class=" btn btn-dark" (click)="stepTwoValid(t, $event)">
+                                    Let's get your first
+                                </button>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab id="tab-selectbyid2" [disabled]="stepTwo">
+                    <ng-template ngbTabTitle>
+                        <b>Step 2 : Upload</b>
+                    </ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="card-body">
+                            <h5 class="card-title">Upload your files</h5>
+
+
+                            <div id="heroH" class="hero is-fullheight">
+                                <div class="hero-body">
+                                    <div class="container">
+                                        <div class="columns is-multiline">
+                                            <!--<div class="column is-8 is-offset-2">-->
+                                            <!--<div class="drop-container" ngFileDrop [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">-->
+                                            <!--<p>-->
+                                            <!--Drag a file here or-->
+                                            <!--<label class="upload-button">-->
+                                            <!--<input type="file" ngFileSelect [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" multiple-->
+                                            <!--id="browseContent" #browseContent> browse-->
+                                            <!--</label>-->
+                                            <!--to upload.-->
+                                            <!--</p>-->
+                                            <!--</div>-->
+                                            <!--</div>-->
+                                            <div class="col-md-6 mx-auto ">
+                                                <div class="drop-container" ngFileDrop [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput"
+                                                    multiple id="dropContent" #dropContent>
+                                                    <div class="my-auto">
+                                                        <p class="my-auto text-center">
+                                                            <label class="upload-button mb-0">
+                                                                <input style="color: #1770e8;" class="mb-0" type="file" ngFileSelect [options]="options" (uploadOutput)="onUploadOutput($event)"
+                                                                    [uploadInput]="uploadInput" multiple onclick="document.getElementById('browseContent').value = ''"
+                                                                    id="browseContent" #browseContent> Upload a file.</label>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="column is-8 is-offset-2">
+                                                <div class="upload-items">
+                                                    <div class="container">
+                                                        <div class="upload-item" *ngFor="let file of files; let i = index;">
+
+                                                            <div class="row">
+                                                                <div class="filename col-md-6 small d-flex">
+                                                                    <b class="mr-1">{{ file.name }}</b>
+                                                                    <span class="pull-right">Uploaded</span>
+                                                                </div>
+                                                                <div class="col mt-auto mb-auto align-items-center d-flex">
+
+
+                                                                    <div class="col progress pull-right">
+                                                                        <span class="bar" [style.width]="file?.progress?.data?.percentage + '%'" [style.background-color]="file.responseStatus?'rgb(23, 112, 232)':'rgb(141, 151, 146)'"></span>
+                                                                    </div>
+                                                                    <span class="row mx-1 ml-1 pull-right">
+                                                                        <!--<button style="text-transform: none; padding: 15px; margin-top: auto;" type="button" class="btn btn-outline-danger btn-sm pull-right small p-0" id="removeBtnStepTwo" (click)="removeFileFromList(file,file.id)"-->
+                                                                        <!--[disabled]="file.progress?.status != 2">Remove</button>-->
+
+                                                                        <button style="text-transform: none; padding: 15px; margin-top: auto; width: 20px" type="button" class="btn btn-outline-danger btn-sm pull-right small p-0"
+                                                                            id="removeBtnStepTwo" (click)="removeFileFromList(file,file.id)"
+                                                                            [disabled]="file.progress?.status != 2">
+                                                                            <span style="letter-spacing: 0px;" aria-hidden="true">&times;</span>
+                                                                        </button>
+
+                                                                    </span>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row pull-left small d-flex h-25" style="justify-content: space-evenly;">
+                                                                <div class="col-md-6"></div>
+                                                                <span class="col text-left">
+                                                                    <span class="error" *ngIf="file.responseStatus >= 400">{{file.error}}</span>
+                                                                    <span class="error" *ngIf="file.responseStatus < 400">
+                                                                        Duration: {{file.metadata?.seconds}} seconds
+                                                                    </span>
+                                                                    <span *ngIf="file.progress?.status != 2">{{ file.progress?.data?.percentage }}%</span>
+                                                                    <span class="file-metadata" *ngIf="file.progress?.status != 2">ETA {{ file.progress?.data?.etaHuman }}</span>
+                                                                </span>
+                                                            </div>
+
+                                                        </div>
+                                                        <hr *ngIf="files.length!=0">
+                                                    </div>
+                                                    <div *ngIf="uploadDone" class="container col mx-auto">
+                                                        <div style="margin-bottom:4px;" class="row m-auto small justify-content-between" *ngFor="let file of files">
+                                                            <!--<div class="col-md-4 mx-auto text-sm-left mr-3 mt-auto mb-auto align-middle"></div>-->
+                                                            <!--<div class="col-md-4 mx-auto ml-3 mt-auto mb-auto align-middle">-->
+                                                            <span class="">
+                                                                <b>{{file.name}} : </b>
+                                                            </span>
+                                                            <form class="">
+                                                                <label for="" class="radio-inline m-0">
+                                                                    <span class=" pull-right">
+                                                                        <b>&nbsp; Perfect {{file.amount_perfect}}</b> | cost:
+                                                                        € {{file.metadata?.amount_perfect}},-
+                                                                        <input style="vertical-align: text-top;" id="{{file.id}}-perfect" type="radio" name="optradio" value="perfect" #perfect [checked]="file.metadata?.isPerfect"
+                                                                            (change)="calculateOrderWithOptions(file,perfect.value)">
+                                                                    </span>
+                                                                    <span class="mr-1 mr-sm-3 pull-right">
+                                                                        <b>&nbsp; Raw {{file.amount}}</b> | cost: € {{file.metadata?.amount}},-
+                                                                        <input style="vertical-align: text-top;" id="{{file.id}}-raw" type="radio" name="optradio" value="raw" #raw checked [checked]="!file.metadata?.isPerfect"
+                                                                            (change)="calculateOrderWithOptions(file,raw.value)">
+                                                                    </span>
+                                                                </label> &nbsp;
+                                                            </form>
+
+                                                            <!--</div>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--<div class="column is-8 is-offset-2">-->
+                                            <!--<div class="upload-items">-->
+                                            <!--<div class="upload-item" *ngFor="let file of files; let i = index;">-->
+
+                                            <!--<span class="filename">-->
+                                            <!--<h5>{{ file.name }}-->
+                                            <!--<button type="button" class="btn btn-outline-danger btn-sm pull-right" id="removeBtnStepTwo" (click)="removeFileFromList(file,file.id)"-->
+                                            <!--[disabled]="file.progress?.status != 2">remove</button>-->
+                                            <!--</h5>-->
+                                            <!--<span *ngIf="file.progress?.status != 2">{{ file.progress?.data?.percentage }}%</span>-->
+                                            <!--<span class="file-metadata" *ngIf="file.progress?.status != 2">ETA {{ file.progress?.data?.etaHuman }}</span>-->
+                                            <!--</span>-->
+                                            <!--<div class="progress">-->
+                                            <!--<span class="bar" [style.width]="file?.progress?.data?.percentage + '%'"></span>-->
+                                            <!--</div>-->
+                                            <!--<span class="error" *ngIf="file.responseStatus >= 400">{{file.error}}</span>-->
+                                            <!--<span class="error" *ngIf="file.responseStatus < 400">-->
+                                            <!--Duration: {{file.metadata?.seconds}} seconds | Cost: {{file.metadata?.amount}}€-->
+                                            <!--</span>-->
+
+                                            <!--</div>-->
+                                            <!--</div>-->
+                                            <!--<div class="row mt-3">-->
+                                            <!--<div class="col-md-8 text-right">-->
+                                            <!--<h5>Total:</h5>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-md-4 text-right">-->
+                                            <!--<h5>{{orderTotal}} &euro;</h5>-->
+                                            <!--</div>-->
+                                            <!--</div>-->
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div *ngIf="files.length==0">
+                                <hr>
+                                <p class="margin-0 text-muted text-center">
+                                    <small>You currently have no uploaded files.</small>
+                                </p>
+                            </div>
+
+                            <br>
+                            <div *ngIf="files!=0" class="container col mx-auto">
+
+                                <div class="col text-right">
+                                    <h6 class="mb-0" style="font-size: 13px !important;">Service fee &nbsp; &euro; 1,- </h6>
+                                </div>
+                            </div>
+
+                            <div *ngIf="orderPerfectTotal!=0" class="container col mx-auto">
+                                <div class="col text-right flex-nowrap">
+                                    <h6 class="mb-0" style="font-size: 13px !important;">Perfect transcription &nbsp; &euro; {{orderPerfectTotal}},- </h6>
+                                </div>
+                            </div>
+
+                            <div *ngIf="files!=0" class="container col mx-auto ">
+                                <div class="col text-right">
+                                    <h6 class="mb-0" style="font-size: 13px !important;">
+                                        <b style="margin: 1px">Total &nbsp; </b>&euro; {{orderTotal}},-</h6>
+                                </div>
+                            </div>
+
+                            <!--<div>-->
+                            <!--<p class="margin-0 text-muted text-center">-->
+                            <!--<small>You need to upload your files before proceeding with payment.</small>-->
+                            <!--</p>-->
+                            <!--</div>-->
+
+                            <br>
+
+                            <div>
+                                <button class=" btn btn-dark" [disabled]="!files.length || !uploadDone" (click)="stepThreeValid(t,$event)" *ngIf="account.billing">
+                                    Proceed to payment
+                                </button>
+                                <button class=" btn btn-dark" [disabled]="!files.length || !uploadDone" (click)="stepThreeValid(t,$event)" *ngIf="!account.billing">
+                                    Proceed to billing
+                                </button>
+                            </div>
+
+                        </div>
+                    </ng-template>
+
+                </ngb-tab>
+                <ngb-tab id="tab-selectbyid3" [disabled]="stepThree">
+                    <ng-template ngbTabTitle>
+                        <b>Step 3 : Payment</b>
+                    </ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="card-body">
+
+                            <div *ngIf="!account.billing">
+
+                                <div class="alert alert-info">
+                                    This is a one-time step. We need your billing details to generate the receipt for your purchase.
+                                </div>
+
+                                <form [formGroup]="billingForm" class="form-horizontal" role="form" (ngSubmit)="saveBillingAndRedirectToMollie(billingForm.value)">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input formControlName="firstName" type="text" class="form-control" id="" placeholder="Enter first name">
+
+                                        <div class="alert alert-danger" *ngIf="!billingForm.controls['firstName'].valid && billingForm.controls['lastName'].touched">Please enter a valid name</div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input formControlName="lastName" type="text" class="form-control" id="" placeholder="Enter last name">
+                                        <div class="alert alert-danger" *ngIf="!billingForm.controls['lastName'].valid && !billingForm.controls['lastName'].value && billingForm.controls['lastName'].touched">Please enter a valid name</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="street">Street</label>
+                                        <input formControlName="street" type="text" class="form-control" id="" placeholder="Enter street name">
+                                        <div class="alert alert-danger" *ngIf="!billingForm.controls['street'].valid && billingForm.controls['street'].touched">Please enter a valid street name</div>
+                                    </div>
+
+                                    <div class="form-group">
+
+                                        <label for="city">City</label>
+                                        <input formControlName="city" type="text" class="form-control" id="" placeholder="Enter city name">
+                                        <div class="alert alert-danger" *ngIf="!billingForm.controls['city'].valid && billingForm.controls['city'].touched">Please enter a valid city name</div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="country">Country</label>
+                                        <input formControlName="country" type="text" class="form-control" id="" placeholder="Enter country name">
+                                        <div class="alert alert-danger" *ngIf="!billingForm.controls['country'].valid && billingForm.controls['country'].touched">Please enter a valid country name</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input formControlName="email" type="email" class="form-control" id="" placeholder="Enter email name">
+                                        <div class="alert alert-danger" *ngIf="!billingForm.controls['email'].valid && billingForm.controls['email'].touched">Please enter a valid email</div>
+                                    </div>
+
+                                </form>
+
+                                <hr>
+                            </div>
+
+
+                            <h5 class="card-title">Have your first order now !</h5>
+                            <p class="card-text">
+                                <span *ngIf="account.billing">
+                                    <!-- Thank you ! in&nbsp;{{countDown | async}}&nbsp;seconds you will be redirected to our safe payment getaway.  -->
+                                    Great! Now click on the link below to proceed with the payment.
+                                </span>
+                                <span *ngIf="!account.billing">
+                                    Click the button below to proceed to the payment geteway.
+                                </span>
+                            </p>
+                            <p class="card-text">Please click the link below if you don't like waiting.</p>
+                            <div>
+                                <button class="btn btn-dark" (click)="getPaymentLink()" *ngIf="account.billing">
+                                    Go to payment link
+                                </button>
+                                <button class="btn btn-dark" (click)="submitBillingAndProceedToPayment(billingForm.value)" *ngIf="!account.billing">
+                                    Go to payment link
+                                </button>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+
+        </div>
+    </div>
+
+
+    <div *ngIf="transcripts.length">
+        <div *ngIf="transcripts.length == 0">
+            No transcripts uploaded. Add a new transcript right now.
+        </div>
+
+        <div class="card" style="width: 100%;">
+            <ul class="list-group list-group-flush file-grid">
+
+                <li class="list-group-item" style="min-height: 40px;">
+
+                    <div class="d-flex">
+                        <div class="file-grid__header file-grid__name">
+                            Filename
+                        </div>
+                        <div class="file-grid__header file-grid__created">
+                            Last modified
+                        </div>
+                        <div class="file-grid__header file-grid__status">
+                            Status
+                        </div>
+                        <div class="file-grid__header file-grid__extra">
+                            &nbsp;
+                        </div>
+                    </div>
+
+
+                </li>
+
+
+                <li class="list-group-item" *ngFor="let transcript of transcripts">
+
+                    <div class="d-flex file-grid__row">
+                        <div class="file-grid__column file-grid__name flex-vertically-center">
+                            <a [routerLink]="[transcript.files._id]">
+                                <p class="margin-0">{{transcript.files?.metadata.filename}}</p>
+                            </a>
+                        </div>
+                        <div class="file-grid__column file-grid__created flex-vertically-center">
+                            <p class="margin-0">Created at todo</p>
+                        </div>
+                        <div class="file-grid__column file-grid__status flex-vertically-center">
+                            <p class="margin-0">{{transcript.transcriptStatus}}</p>
+                        </div>
+                        <div class="file-grid__column file-grid__extra flex-vertically-center">
+                            <div ngbDropdown class="d-inline-block">
+                                <div class="" id="dropdownBasic1" ngbDropdownToggle>
+                                    <i class="fa-more-button-of-three-dots"></i>
+                                </div>
+                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                    <button type="button" class="dropdown-item" id="removeBtn" (click)="removeTranscript(transcript.files._id)">Delete Transcript
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #loading>
+    No transcripts available.
+</ng-template>

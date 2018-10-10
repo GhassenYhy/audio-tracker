@@ -1,0 +1,30 @@
+#removeBtn{
+    float: right;
+}
+
+.LengthyKeystrokeKey{
+    font-size: 16px;
+    font-weight: bolder;
+    line-height: 1.5em;
+    border: 2px solid #7d7d7d;
+    border-radius: 8px;
+    color: #746d7c;
+    display: inline-block;
+    padding: 10px 15px;
+    min-width: 50px;
+}
+
+.ShortcutsEx{
+    font-weight: 600;
+    font-size: large;
+}
+
+.shortcuts{
+    display: flex;
+    align-items: center;
+}
+
+.shortcutRows{
+    margin-top: 20px;
+    color: darkgrey;
+}

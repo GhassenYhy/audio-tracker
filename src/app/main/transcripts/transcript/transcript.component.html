@@ -1,0 +1,316 @@
+<div class="alert alert-danger" *ngIf="showError">
+    There was a problem processing your request
+</div>
+
+
+<div class="audio-player-wrapper">
+    <audio height=30 width="100%" id="audio-player" class="azuremediaplayer amp-default-skin amp-big-play-centered azure-fixed"
+        tabindex="0"></audio>
+</div>
+
+
+<div *ngIf="fileData; else loading">
+
+
+
+
+    <ul class="list-group list-group-flush mt-2">
+        <li *ngIf="fileData.files.upgradeCost" class="list-group-item mb-5">
+            <div class="alert alert-info text-center" role="alert">
+                <h6 class="align-middle mb-2 mt-2">For more accurate results, we recommend to
+                    <a class="font-weight-bold" href="javascript:void(0)" (click)="openUpgradeModalVerticallyCentered(fileData.transcript.file, contentUpgrade)">upgrade</a> your transcript to the "Perfect" version using our advanced transcribing system.</h6>
+            </div>
+        </li>
+        <li class="list-group-item pt-2">
+            <div class="row">
+                <div class="col-md-7">
+                    <h3>{{fileData.files?.metadata?.filename}}
+                    </h3>
+                    <h6>Processed on: {{fileData.createdAt | amDateFormat:'DD-MM-YYYY HH:mm'}}</h6>
+                    <h6>Duration: {{fileData.files?.metadata?.durationInSeconds | formatDuration}}</h6>
+                </div>
+                <div class="col-md-5 text-right d-flex" style="display: grid;">
+                    <!--{{fileData.transcript.file}}-->
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-primary btn-sm m-1" id="shareBtn" (click)="openVerticallyCentered(fileData.transcript.file, content)">Share Link
+                        </button>
+
+                    </div>
+                    <div class="col">
+                        <a (click)="modalDownloadPDF(fileData.transcript.file,contentPDF)" class="zsBtn-lg btn btn-sm m-1">Download PDF</a>
+                        <a (click)="downloadSBV(fileData.transcript.file)" class="zsBtn-lg btn btn-sm m-1">Download SBV</a>
+                        <a (click)="modalDownloadDOC(fileData.transcript.file,contentDOC)" class="zsBtn-lg btn btn-sm m-1">Download DOC</a>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </li>
+        <li class="list-group-item pt-2">
+            <div class="row">
+                <div class="col-md-2  text-right">
+                    <b>Speaker</b>
+                </div>
+                <div class="col-md-10">
+                    <b>Transcript</b>
+                    <a *ngIf="revertable" href="javascript:void(0)" class="btn zsBtn-lg btn-block btn-outline-dark pull-right col-md-2" (click)="revertToOriginal()">revert</a>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item" *ngFor="let item of results; let index = index;">
+            <div class="row">
+                <div class="col-md-2  text-right">
+                    <p class="margin-0">
+                        <small>&nbsp;</small>
+                    </p>
+                    <span *ngIf="item.speaker === 'unk'" [(contenteditableModel)]="item.speaker" contenteditable="true">Unknown</span>
+                    <span *ngIf="item.speaker !== 'unk'" [(contenteditableModel)]="item.speaker" contenteditable="true">{{item.speaker}}</span>
+                </div>
+                <div class="col-md-10">
+                    <p class="text-muted margin-0">
+                        <small>{{item?.startTime | formatPlayerTime}}</small>
+                    </p>
+                    <div *ngIf="item.text; else isMusic">
+
+
+                        <p class="margin-0" lang="nl">
+
+
+                            <span *ngFor="let word of item.result">
+
+                                <span [ngClass]="{
+                                        'current-word': (playerCurrentTime > word.start && playerCurrentTime < word.end)
+                                    }" (click)="onWordClick(word)">
+                                    <span [(contenteditableModel)]="word.word" contenteditable="true">{{word.word}}</span>
+                                </span>
+
+                            </span>
+                        </p>
+                    </div>
+                    <!-- <p class="text-muted margin-0">
+                        <small> {{item?.endTime | formatPlayerTime}}</small>
+                    </p> -->
+
+
+                    <ng-template #isMusic>
+                        <code>music</code>
+                    </ng-template>
+                </div>
+            </div>
+            <!-- <div class="media">
+                <div class="media-left align-self-start mx-3">
+                    
+                </div>
+                <div class="media-left align-self-start mx-3">
+
+                    <span *ngIf="item.speaker === 'unk'">Unknown</span>
+                    <span *ngIf="item.speaker ==! 'unk'">{{item.speaker}}</span>
+                </div>
+                <div class="media-body  mx-3">
+                    <p class="margin-0" *ngIf="item.text; else isMusic" lang="nl">
+
+                        <span *ngFor="let word of item.result; let index = index; trackBy:trackByIndex">
+
+                            <span contenteditable="true" [(contenteditableModel)]="item.result[index]" [ngClass]="{
+                                'badge': (word.confidence < 0.9 || word.confidence >1),
+                                'badge-danger': word.confidence < 0.7, 
+                                'badge-warning': (word.confidence >= 0.7  && word.confidence < 0.9),
+                                'badge-success': word.confidence > 1,
+                                'current-word': (playerCurrentTime > word.start && playerCurrentTime < word.end)
+                            }" (click)="onWordClick(word)">
+                                {{word.word}}
+                            </span>
+
+                        </span>
+                    </p>
+
+                    <ng-template #isMusic>
+                        <code>music</code>
+                    </ng-template>
+                </div>
+            </div> -->
+            <a class="pull-right" id="shortcutsTrigger" href="javascript:void(0)" (click)="openShortcutsModal()">Shortcuts</a>
+
+        </li>
+    </ul>
+
+
+    <div class="mb-5">
+        <button href="javascript:void(0)" class="d-flex justify-content-center zsBtn-lg w-25 text-center btn mx-auto text-center d-flex"
+            (click)="saveEdited(id)">Save</button>
+    </div>
+
+
+
+</div>
+
+<ng-template #contentUpgrade let-c="close" let-d="dismiss">
+    <div class="modal-header">
+
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+
+        <div class="hero is-fullheight">
+            <div class="hero-body">
+                <div class="container">
+                    <div class="columns is-multiline">
+                        <div class="column">
+                            <div class="row shortcutRows">
+                                <div class=" text-center alert w-100">
+                                    <h5 style="text-align: center">Transcript upgrade to "Perfect"</h5>
+                                    <div style="background-color: #5fa4ff12">
+                                        <hr>
+                                        <h6>Our advanced transcribing system will get you more accurate results.</h6>
+                                        <h6>For the "
+                                            <b>{{fileData.files.metadata.filename}}</b>" transcript, it will cost you an additional
+                                            amount of &nbsp;
+                                            <b>€ {{fileData.files.upgradeCost}},- </b>
+                                        </h6>
+                                        <hr>
+                                    </div>
+                                    <br>
+                                    <button style="background-color: #3c85e6" class="btn zsBtn-lg btn-primary w-25" (click)="getPaymentLink()">payment</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</ng-template>
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Copy Link</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="row p-3">
+        <div class="col-lg-12 center-block">
+            <div class="input-group">
+                <input type="text" class="form-control" id="shareLink" value={{shareLink}} readonly #sharableLink>
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button" (click)="copyToClipboard(sharableLink)">Copy to clipboard</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!--<div class="modal-body">-->
+    <!--<input type="text" value={{shareLink}}>-->
+    <!--</div>-->
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+    </div>
+</ng-template>
+
+
+<ng-template #contentPDF let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Download PDF</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+    <div class="row p-3">
+        <div class="col-lg-12 center-block">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input [checked]="speakersCheck" (change)="speakersCheck = !speakersCheck" class="form-check-input" type="checkbox"> With speakers
+                </label>
+                <br>
+                <label class="form-check-label">
+                    <input [checked]="timestampsCheck" (change)="timestampsCheck = !timestampsCheck" class="form-check-input" type="checkbox"> With timestamps
+                </label>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-md-2 col-centered">
+                        <button (click)="downloadPDF()" class="zsBtn-lg btn btn-secondary" type="button">Download PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row p-3">-->
+    <!--<div class="col-lg-12 center-block">-->
+    <!--<div class="input-group">-->
+    <!--<input type="text" class="form-control" readonly #sharableLink>-->
+    <!--<span class="input-group-btn">-->
+    <!--<button class="btn btn-secondary" type="button">PDF</button>-->
+    <!--</span>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="modal-body">-->
+    <!--<input type="text" value={{shareLink}}>-->
+    <!--</div>-->
+    <div class="modal-footer">
+        <button type="button" class="zsBtn-error btn btn-light" (click)="c('Close click')">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #contentDOC let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Download DOC</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+    <div class="row p-3">
+        <div class="col-lg-12 center-block">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input [checked]="speakersCheck" (change)="speakersCheck = !speakersCheck" class="form-check-input" type="checkbox"> With speakers
+                </label>
+                <br>
+                <label class="form-check-label">
+                    <input [checked]="timestampsCheck" (change)="timestampsCheck = !timestampsCheck" class="form-check-input" type="checkbox"> With timestamps
+                </label>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-md-2 col-centered">
+                        <button (click)="downloadDOC()" class="zsBtn-lg btn btn-secondary" type="zsBtn button">Download DOC</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row p-3">-->
+    <!--<div class="col-lg-12 center-block">-->
+    <!--<div class="input-group">-->
+    <!--<input type="text" class="form-control" readonly #sharableLink>-->
+    <!--<span class="input-group-btn">-->
+    <!--<button class="btn btn-secondary" type="button">PDF</button>-->
+    <!--</span>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="modal-body">-->
+    <!--<input type="text" value={{shareLink}}>-->
+    <!--</div>-->
+    <div class="modal-footer">
+        <button type="button" class="zsBtn-error btn btn-light" (click)="c('Close click')">Close</button>
+    </div>
+</ng-template>
+
+
+<ng-template #loading>
+    Loading..
+</ng-template>

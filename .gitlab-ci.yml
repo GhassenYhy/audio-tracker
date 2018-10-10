@@ -1,0 +1,80 @@
+# When using dind, it's wise to use the overlayfs driver for
+# improved performance.
+# BUILD TAG: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG:-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}}
+
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CI_DEBUG_SERVICES: trace
+  GIT_SUBMODULE_STRATEGY: recursive
+
+######## TEMPLATES
+.templates:
+- &build
+  stage: build
+  image: registry.gitlab.com/zoom-media/devops/zoom-it/docker:18.03
+  services:
+    - name: docker:stable-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - bash build/build-docker.sh ${BUILD_TARGET}
+
+- &deploy
+  dependencies: []
+  image: registry.gitlab.com/zoom-media/devops/zoom-it/docker:18.03
+  stage: deploy
+  before_script:
+    - export IMAGE=${CI_REGISTRY_IMAGE}/${TARGET_ENV}:${CI_COMMIT_TAG:-${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHA:0:8}}
+  script:
+    - echo "== Deploying image ${IMAGE}"
+    - mkdir -p ~/.docker
+    - echo "$TLSCACERT" > ~/.docker/ca.pem
+    - echo "$TLSCERT" > ~/.docker/cert.pem
+    - echo "$TLSKEY" > ~/.docker/key.pem
+    - docker login -u $REGISTRY_USER -p $REGISTRY_TOKEN $CI_REGISTRY
+    - docker service update --image ${IMAGE} --with-registry-auth --update-failure-action rollback --update-order start-first ${SERVICE_NAME}
+
+######## JOBS
+build:docker:staging:
+  <<: *build
+  variables:
+     BUILD_TARGET: staging
+
+build:docker:production:
+  <<: *build
+  variables:
+     BUILD_TARGET: prod
+
+deploy:staging:
+  <<: *deploy
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: tcp://23.97.176.179:2376
+    DOCKER_TLS_VERIFY: 1
+    SERVICE_NAME: staging_zs-customer-frontend
+    TLSCACERT: ${STAGING_TLSCACERT}
+    TLSCERT: ${STAGING_TLSCERT}
+    TLSKEY: ${STAGING_TLSKEY}
+    REGISTRY_USER: ${STAGING_REGISTRY_USER}
+    REGISTRY_TOKEN: ${STAGING_REGISTRY_TOKEN}
+    TARGET_ENV: staging
+  dependencies:
+    - build:docker:staging
+  only:
+    - master
+
+.deploy:production:manual:
+  <<: *deploy
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: tcp://52.174.189.212:2376
+    DOCKER_TLS_VERIFY: 1
+    SERVICE_NAME: production_zs-customer-frontend
+    TLSCACERT: ${PRODUCTION_TLSCACERT}
+    TLSCERT: ${PRODUCTION_TLSCERT}
+    TLSKEY: ${PRODUCTION_TLSKEY}
+    REGISTRY_USER: ${PRODUCTION_REGISTRY_USER}
+    REGISTRY_TOKEN: ${PRODUCTION_REGISTRY_TOKEN}
+    TARGET_ENV: production
+  when: manual

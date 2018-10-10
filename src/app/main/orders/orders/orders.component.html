@@ -1,0 +1,128 @@
+<h2>
+    Orders
+</h2>
+
+
+<div class="mt-4 row d-flex justify-content-between text-center">
+    <div class="col-md-3 d-none d-md-block">
+        <b>Orders ID</b>
+    </div>
+    <div class="col-md-2 d-none d-md-block">
+        <b>Cost</b>
+    </div>
+    <div class="col-md-2 d-none d-lg-block">
+        <b>Files list</b>
+    </div>
+    <div class="col-md-2 d-none d-lg-block">
+        <b>Total duration</b>
+    </div>
+    <div class="col-md-2 d-none d-md-block text-center">
+        <b>Action</b>
+    </div>
+
+</div>
+
+
+
+
+<div *ngIf="orders.length; else loading">
+
+    <div *ngIf="orders.length == 0">
+        No orders uploaded. Add a new transcript right now.
+    </div>
+
+    <div class="ml-0 d-flex justify-content-between row text-center my-md-4 my-1 ordersPage" *ngFor="let order of orders">
+
+        <div class="col-md-3 my-auto small">
+            <span class="d-flex flex-wrap">
+                <span>Order ID :</span>
+                <span>{{order._id}}</span>
+            </span>
+            <span class="d-flex flex-wrap text-secondary">created: {{order.createdAt | amDateFormat:'DD-MM-YYYY'}}</span>
+        </div>
+
+        <div class="col-md-2 my-auto small float-lg-right">
+            <span class="justify-content-sm-start justify-content-md-center d-flex d-flex flex-wrap float-sm-left float-md-none">
+                &euro; {{order.totalCost+1}},-
+            </span>
+        </div>
+
+        <div class="col-md-2 my-auto small d-none d-lg-block">
+            <span class="d-flex flex-wrap justify-content-center">
+
+                <span class="list-group" *ngFor="let item of order.orderFiles">
+                    <span style="min-height: 0px; border-top:0;" class="list-group-item">
+                        {{item.metadata.filename}}
+                    </span>
+                </span>
+
+            </span>
+        </div>
+
+        <div class="col-md-2 my-auto small d-none d-lg-block">
+            <span class="d-flex flex-wrap justify-content-center">
+                <span>
+                    <span class="list-group">
+                        {{order.totalDur | formatDuration}}
+                    </span>
+                </span>
+            </span>
+        </div>
+
+        <div class="col-md-2 my-auto small">
+            <span class="d-flex  flex-wrap justify-content-sm-start justify-content-md-center">
+                <span>
+                    <b></b>
+                    <span class="list-group">
+                        <button style="background-color: #1770e8; font-size: 0.75em" (click)="getOrderInvoice(order._id)" class="btn text-center text-white p-1 text-lowercase">Download</button>
+                    </span>
+                </span>
+            </span>
+        </div>
+
+    </div>
+
+    <!--<div class="card" style="width: 100%;">-->
+
+    <!--<ul class="list-group list-group-flush">-->
+
+    <!--<li class="list-group-item" *ngFor="let order of orders">-->
+
+    <!--<div class="row">-->
+    <!--<div class="col">-->
+    <!--<h5>-->
+    <!--{{order._id}}-->
+    <!--</h5>-->
+
+    <!--<p>-->
+    <!--<small>Created: {{order.createdAt | amParse:'YYYY-MM-DD HH:mm:ss.SSSZ' | amTimeAgo}}</small>-->
+    <!--</p>-->
+    <!--<ul class="list-unstyled">-->
+    <!--<li *ngFor="let item of order.orderFiles">-->
+    <!--{{item.metadata.filename}}-->
+    <!--</li>-->
+    <!--</ul>-->
+
+    <!--</div>-->
+
+    <!--&lt;!&ndash; <hr> &ndash;&gt;-->
+
+
+
+    <!--<div class="media-right align-self-top">-->
+    <!--<a (click)="getOrderInvoice(order._id)" class="btn btn-primary">-->
+    <!--Download Invoice-->
+    <!--</a>-->
+    <!--</div>-->
+
+    <!--</div>-->
+    <!--</li>-->
+    <!--</ul>-->
+    <!--</div>-->
+
+</div>
+
+
+<ng-template #loading>
+    No orders available.
+</ng-template>

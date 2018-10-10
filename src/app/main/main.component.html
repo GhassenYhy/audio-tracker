@@ -1,0 +1,119 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">
+        <img src="/assets/img/zoom-script-logo.png" class="img-fluid navbar-logo">
+    </a>
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <ul class="navbar-nav ml-auto" id="navbarSupportedContent">
+        <!-- <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                    <span class="sr-only">(current)</span>
+                </a>
+            </li> -->
+        <!-- <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li> -->
+        <!-- <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    Dropdown
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li> -->
+
+        <li class="nav-item">
+            <button class=" btn btn-outline-light btn-sm" (click)="openOrderModal()" style="position: relative;">
+                new order
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <div ngbDropdown class="d-inline-block">
+                <a class="nav-link btn btn-link " id="dropdownBasic1" ngbDropdownToggle>
+                    {{account.firstName}} {{account.lastName}}
+                </a>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+
+                    <button class="dropdown-item" routerLink="/files" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
+                        Transcripts
+                    </button>
+                    <button class="dropdown-item" routerLink="/settings" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        Settings
+                    </button>
+
+                    <button class="dropdown-item" routerLink="/orders" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        Orders
+                    </button>
+
+                    <button class="dropdown-item" (click)="openOrderModal()">
+                        Add new order
+                    </button>
+
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" (click)="logout()">
+
+                        Logout
+
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+</nav>
+
+
+<nav class="sidebar" [ngClass]="{'display-sidebar': showSidebar}">
+    <ul class="nav nav-pills flex-column">
+
+        <li class="nav-item" (click)="handleClick()">
+            <a class="nav-link font-weight-normal" routerLink="/files" routerLinkActive="font-weight-bold" [routerLinkActiveOptions]="{exact: false}">
+                Transcripts
+            </a>
+        </li>
+        <li class="nav-item" (click)="handleClick()">
+            <a class="nav-link font-weight-normal" routerLink="/settings" routerLinkActive="font-weight-bold" [routerLinkActiveOptions]="{exact: true}">
+                Settings
+            </a>
+        </li>
+
+        <li class="nav-item" (click)="handleClick()">
+            <a class="nav-link font-weight-normal" routerLink="/orders" routerLinkActive="font-weight-bold" [routerLinkActiveOptions]="{exact: true}">
+                Orders
+            </a>
+        </li>
+
+        <li class="nav-item" (click)="handleClick()">
+            <a class="nav-link font-weight-normal" (click)="openOrderModal()">
+                Add new order
+            </a>
+        </li>
+
+        <li class="nav-item d-lg-none d-md-none" (click)="handleClick(); logout()">
+            <a class="nav-link font-weight-normal">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+</nav>
+
+<main class="padding-top-3 main-section">
+
+
+    <div class="pl-4 pr-4">
+        <router-outlet></router-outlet>
+    </div>
+
+</main>
+
+<div class="sidebar-black-overlay" [ngClass]="{'sidebar-open': showSidebar}" (click)="toggleSidebar()"></div>

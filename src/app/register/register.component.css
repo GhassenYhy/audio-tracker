@@ -1,0 +1,99 @@
+/*.weakPassword{*/
+
+    /*background-color: red;*/
+/*}*/
+
+
+/*.goodPassword{*/
+
+    /*background-color: green;*/
+/*}*/
+
+.headerRegistration {
+    font-size: 20px;
+    color: black;
+}
+
+@media screen and (max-width: 768px) {
+    .form-control{
+        height: 40px;
+    }
+    .input-group-addon{
+        display: none;
+    }
+    .form-register__wrapper{
+        background: none;
+    }
+    .black-overlay{
+        background: none;
+    }
+}
+
+.errorMobile{
+    display: none;
+    float: right;
+    position: relative;
+    margin-top: -10.5px;
+    margin-right: 10px;
+    z-index: 3;
+    background-color: white;
+    color: #a94442;
+    width: 100px;
+    text-align: center;
+    font-size: 14px;
+    height: 20px;
+}
+
+@media screen and (max-width: 575px) {
+    .errorMobile{
+        display: block;
+        float: right;
+        position: relative;
+        margin-top: -21.5px !important;
+        margin-right: 10px;
+        z-index: 3;
+        background-color: white;
+        color: #a94442;
+        /*width: 80px;*/
+        text-align: center;
+        font-size: 14px;
+        height: 20px;
+        width: max-content;
+    }
+    .errorMobileText{
+        font-size: 0.8rem;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+    .errorMobileText2{
+        margin-top: 12px;
+        background-color: white;
+        width: 60px;
+    }
+    .errorMobileTooLong{
+        margin-top: -9px;
+        background-color: #fff0;
+    }
+
+    .errorMobileTooShort{
+        margin-top: -9px;
+    }
+
+    .form-register{
+        padding: 1rem 3rem;
+    }
+
+    .form-register__wrapper{
+        background-image: none;
+    }
+    .black-overlay{
+        display: none;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+    .barStrength{
+        margin-left: -80px;
+    }
+}

@@ -1,0 +1,81 @@
+<div class="full-height form-register__wrapper">
+
+    <div class="black-overlay"></div>
+<div class="form-register padding-vertical-5">
+
+
+
+    <form [formGroup]="rForm" class="form-horizontal" role="form" (ngSubmit)="reset(rForm.value)">
+
+        <img src="/assets/img/zoom-script-logo-black.png" style="width: 150px; height: auto; " class="mx-auto d-block" />
+        <div class="text-center">
+
+            <div class="">
+                <h2 class="headerRegistration">Reset password</h2>
+            </div>
+        </div>
+
+
+            <div class="">
+                <div class="">
+                    <div class="form-group has-danger">
+                        <label class="sr-only" for="email">E-Mail Address</label>
+                        <div class="input-group mb-0 mb-sm-2">
+                            <input type="text" formControlName="email" class="form-control" id="email" required autofocus email placeholder="Enter your email">
+                        </div>
+
+                        <div class="errorMobile" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched"><h6 class="errorMobileText">Invalid Email</h6></div>
+
+                        <div class="d-none d-sm-block alert alert-info margin-vertical-top-1 text-center" *ngIf="!rForm.controls['email'].valid && rForm.controls['email'].touched">Please enter a valid email</div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        <div class="w-100" style="padding-top: 2rem" #successMessage style="display:none">
+            <div class="col p-0 mx-auto text-center m-0">
+                <div class="alert alert-success margin-vertical-top-1">
+                    An email has been sent to your email address, please follow instructions.
+                </div>
+            </div>
+        </div>
+
+        <div class="w-100" style="padding-top: 2rem" #errorMessage style="display:none">
+            <div class="w-100">
+                <div class="alert alert-danger margin-vertical-top-1">
+                    Invalid Request.
+                </div>
+            </div>
+        </div>
+
+        <div class="w-100" style="padding-top: 2rem" #activationErrorMessage style="display:none">
+            <div class="w-100">
+                <div class="alert alert-danger margin-vertical-top-1">
+                    User unknown or account not yet activated
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <div class="w-50 mx-auto">
+                <button type="submit" class="btn zsBtn-lg btn-primary btn-block btn-lg" [disabled]="!rForm.valid">
+                    <i class="fa fa-sign-in"></i>Submit</button>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="my-0">
+            <div class="w-100">
+                <div class="text-center my-0">
+                    You can go back to the <b><a class="redirectionBtn" routerLink="/login" href="javascript:void(0)">Login</a></b> page
+                </div>
+            </div>
+        </div>
+
+
+
+    </form>
+</div>
+</div>

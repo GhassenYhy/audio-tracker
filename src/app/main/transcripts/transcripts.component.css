@@ -1,0 +1,20 @@
+#removeBtn, #shareBtn {
+    float: right;
+    margin-right: 20px;
+}
+
+.detailsBtn {
+    color: lightseagreen;
+}
+
+#heroH {
+    text-align: left;
+}
+
+.my-pagination /deep/ .ngx-pagination .current {
+    padding: 0.1875rem 0.625rem;
+    background: #343a40;
+    color: #ffffff;
+    cursor: default;
+}
+

@@ -1,0 +1,112 @@
+<h1> Order analytics</h1>
+<!-- 
+<nav aria-label="breadcrumb" role="navigation">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Speech-to-text Zoom Media</a>
+        </li>
+        <li class="breadcrumb-item active">
+            Getting Started
+        </li>
+    </ol>
+</nav>
+
+
+<h1> Getting Started </h1>
+
+
+<h3>
+    Overview
+</h3>
+<p>
+    You can access the capabilities of the Speech to Text service via a WebSocket interface (currently developing) and an asynchronous
+    HTTP interface.
+</p>
+<ul>
+    <li>
+        The WebSocket interface provides a single version of the method for transcribing audio. The interface offers efficient implementation,
+        low latency, and high throughput over a full-duplex connection.
+    </li>
+    <li>
+        The asynchronous HTTP interface provides a non-blocking POST method for transcribing audio. The method consists in 3 steps:
+        create session with the language model desired, upload your files, check if the service finished processing your
+        audio file.
+    </li>
+</ul>
+
+
+
+<h4>The asynchronous HTTP interface method</h4>
+<p>
+    When working with the service's asynchronous HTTP interface, you can elect to learn about job status and receive results
+    in the following way:
+</p>
+<div class="alert alert-info">
+    Make sure each request contains the subscription key in the custom header
+    <kbd>X-Zoom-S2T-Key</kbd>. The subscription key can be generated in your Settings Page. We will be using this key to track
+    your usage.
+</div>
+<ul>
+    <li>
+        <h5>Create Session </h5>
+        <p>Call the POST method to
+            <var>{{host}}/speech-to-text/session/</var>
+            containing your
+            <kbd>key</kbd> header and
+            <kbd>language</kbd> you wish to use the service for.
+        </p>
+
+        <h6>Request Model</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step1Input" language="json"></code></pre>
+        <h6>Example Response</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step1Output" language="json"></code></pre>
+        <h6>cURL example request</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step1curl" language="json"></code></pre>
+
+    </li>
+
+    <li>
+        <h5>Upload the file to the created session </h5>
+        <p>Call the POST method to
+            <var>{{host}}/speech-to-text/session/
+                <kbd>SESSIONID</kbd>
+            </var>
+            containing the audio as a multipart request. You specify the parameters of the request as a combination of request headers
+            and JSON metadata. Note to also set the Content-Type header to multipart/form-data.
+        </p>
+        <h6>Input Model</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step2Input" language="json"></code></pre>
+        <h6>Example Response</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step2Output" language="json"></code></pre>
+        <h6>cURL example request</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step2curl" language="json"></code></pre>
+
+    </li>
+
+    <li>
+        <h5>Get the results by polling the service</h5>
+        <p>Call the GET method to
+            <var>{{host}}/speech-to-text/session/
+                <kbd>SESSIONID</kbd>
+            </var>
+            method to check the status of current session.
+        </p>
+        <h6>Example Response if the session is NOT DONE</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step3Output" language="json"></code></pre>
+        <h6>Example Response if the session is DONE</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step3OutputDone" language="json"></code></pre>
+        <h6>cURL example request</h6>
+        <pre><code class="hljs" mwlHighlightJs [source]="step3curl" language="json"></code></pre>
+
+    </li>
+</ul>
+
+
+
+<h3 class="mt-5">
+    API Keys
+</h3>
+<p>
+    API keys Get your sandbox or production API keys from the
+    <a routerLink="/settings">Settings Page</a> to start your integration.
+</p> -->

@@ -1,0 +1,191 @@
+<div class="full-height form-register__wrapper">
+
+    <!-- black overlay -->
+    <div class="black-overlay"></div>
+
+    <div class="form-register padding-vertical-5">
+
+        <form [formGroup]="rForm" class="form-horizontal" role="form" (ngSubmit)="registerAccount(rForm.value)">
+            <img src="/assets/img/zoom-script-logo-black.png" style="width: 150px; height: auto; " class="mx-auto d-block mt-0" />
+            <div class="text-center">
+
+                <div *ngIf="!success" class="">
+                    <h2 class="headerRegistration">Register your new account</h2>
+                </div>
+            </div>
+            <div *ngIf="!success">
+                <div class="">
+
+                <div class="">
+                    <div class="form-group has-danger">
+                        <label class="sr-only" for="firstName">First name</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <input type="text" formControlName="firstName" class="form-control" id="firstName" required autofocus placeholder="Your first name">
+                        </div>
+
+                        <div class="errorMobile" *ngIf="!success && submitted && !rForm.controls['firstName'].valid"><h6 class="errorMobileText">Invalid</h6></div>
+
+                        <div class="d-none d-sm-block alert alert-info margin-vertical-top-1" *ngIf="!success && submitted && !rForm.controls['firstName'].valid">Please enter a valid name</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <div class="">
+                    <div class="form-group has-danger">
+                        <label class="sr-only" for="lastName">Last Name</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon">
+                                <i class="fa fa-user"></i>
+                            </div>
+                            <input type="text" formControlName="lastName" class="form-control" id="lastName" required autofocus placeholder="Your last name">
+                        </div>
+
+                        <div class="errorMobile" *ngIf="!success && submitted && !rForm.controls['lastName'].valid"><h6 class="errorMobileText">Invalid</h6></div>
+
+                        <div class="d-none d-sm-block alert alert-info margin-vertical-top-1" *ngIf="!success && submitted && !rForm.controls['lastName'].valid">Please enter a valid last name</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <div class="">
+                    <div class="form-group has-danger">
+                        <label class="sr-only" for="email">E-Mail Address</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon">
+                                <i class="fa fa-email"></i>
+                            </div>
+                            <input type="text" formControlName="email" class="form-control" id="email" required autofocus email placeholder="Enter your email">
+                        </div>
+
+                        <div class="errorMobile" *ngIf="submitted && !rForm.controls['email'].valid && !success"><h6 class="errorMobileText">Invalid Email</h6></div>
+
+                        <div class="d-none d-sm-block alert alert-info margin-vertical-top-1 mb-0" *ngIf="submitted && !rForm.controls['email'].valid">Please enter a valid email</div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <div class="">
+                    <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <div class="input-group mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon">
+                                <i class="fa fa-key"></i>
+                            </div>
+                            <input type="password" formControlName="password" class="form-control" id="password" placeholder="Password" required #pass>
+                        </div>
+                        <div class="row mr-0 barStrength" *ngIf="!success">
+                            <div *ngIf="!success" class="mt-1" [hidden]="!rForm.controls['password'].dirty || pass.value.length>50"  style="margin-left:80px;width: 150px; height: 3px" [ngStyle]="{'backgroundColor': colorPassword(pass.value),'width':lengthPassword(pass.value)}">
+                                <div [ngStyle]="{'color': colorPassword(pass.value),'width':lengthPassword(pass.value)}" class="small">{{passwordStrengthMessage}}</div>
+                            </div>
+                        </div>
+
+                        <div class="errorMobile errorMobileTooShort" *ngIf="submitted && rForm.controls['password'].errors?.minlength && rForm.controls['password'].dirty"><h6 style="margin-top: 2px;" class="errorMobileText">Too short</h6></div>
+                        <div class="errorMobile errorMobileTooLong" *ngIf="submitted && rForm.controls['password'].errors?.maxlength && rForm.controls['password'].dirty"><h6 class="errorMobileText errorMobileText2">Too long</h6></div>
+
+                        <div class="d-none d-sm-block alert alert-info mt-2 mb-0" *ngIf="submitted && rForm.controls['password'].errors?.minlength && rForm.controls['password'].dirty">Invalid password : Password too short</div>
+                        <div class="d-none d-sm-block alert alert-info mt-2 mb-0" *ngIf="submitted && rForm.controls['password'].errors?.maxlength && rForm.controls['password'].dirty">Invalid password : Password too long</div>
+                        <div class="d-none d-sm-block alert alert-info mt-2 mb-0" *ngIf="submitted && !rForm.controls['password'].valid && rForm.controls['password'].dirty">Invalid password</div>
+
+
+                        <!--<span *ngIf="rForm.controls['password']"></span>-->
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-control-feedback">
+                        <span class="text-danger align-middle">
+                            <!-- Put password error message here -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <div class="">
+                    <div class="form-group">
+                        <label class="sr-only" for="verifPassword">Confirm Password</label>
+                        <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                            <div class="input-group-addon">
+                                <i class="fa fa-key"></i>
+                            </div>
+                            <input type="password" formControlName="verifPassword" class="form-control" id="verifPassword" placeholder="Confirm Password"
+                                required>
+
+                        </div>
+
+                        <div class="errorMobile" *ngIf="submitted && rForm.controls.verifPassword.errors?.MatchPassword && rForm.controls['verifPassword'].touched"><h6 class="errorMobileText">Not matching</h6></div>
+
+                        <div class="d-none d-sm-block alert alert-info" *ngIf="submitted && rForm.controls.verifPassword.errors?.MatchPassword && rForm.controls['verifPassword'].touched">Passwords not matching</div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-control-feedback">
+                        <span class="text-danger align-middle">
+                            <!-- Put password error message here -->
+                        </span>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div *ngIf="success" #successMessage>
+                <div class="w-100" style="margin-top: 20px; margin-bottom: -20px">
+                    <div class="alert alert-success text-center">
+                        Successfully registered! Please check your email and follow instructions.
+                    </div>
+                </div>
+            </div>
+
+            <br>
+            
+            <div class="alert-danger" *ngIf="submitted && !success && rForm.controls['email'].dirty" #usedEmail style="display:none">
+                <div class="w-100">
+                    <div class="alert alert-danger text-center">
+                        This email is already used
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!rForm.valid" style="padding-top: 2rem" #errorMessage style="display:none">
+                <div class="w-100">
+                    <div class="alert alert-danger text-center">
+                        Registering error.
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!success" class="text-center">
+                <div class="w-50 mx-auto">
+                    <button type="submit" class="zsBtn-lg btn btn-primary btn-block btn-lg mx-auto" [disabled]="success">
+                        <i class="fa fa-sign-in"></i> Register</button>
+                </div>
+            </div>
+            <br>
+
+            <div class="my-0">
+                <div class="w-100">
+                    <div class="text-center my-0">
+                        You can go back to the <b><a class="redirectionBtn" routerLink="/login" href="javascript:void(0)">Login</a></b> page
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </form>
+
+    </div>
+
+
+</div>

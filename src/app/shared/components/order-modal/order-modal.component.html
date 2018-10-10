@@ -1,0 +1,243 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel"></h5>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body" *ngIf="!billingDetailsDisplayed">
+
+    <div class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container">
+                <div class="columns is-multiline">
+                    <div class="col-md-6 mx-auto ">
+                        <div class="drop-container" ngFileDrop [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" multiple
+                             id="dropContent" #dropContent>
+                            <div class="my-auto">
+                                <p class="my-auto text-center">
+                                    <label class="upload-button mb-0">
+                                        <input style="color: #1770e8;" class="mb-0" type="file" ngFileSelect [options]="options" (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" multiple onclick="document.getElementById('browseContent').value = ''" id="browseContent" #browseContent> Upload
+
+                                        a file.</label></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-8 is-offset-2">
+                        <div class="upload-items">
+                            <div class="container">
+                                <div class="row mt-2" *ngIf="files.length>0">
+                                    <div class="col">
+
+                                    </div>
+                                    <div class="col d-flex m2 small font-weight-bold">
+                                        <div class="col-4">Raw</div>
+                                        <div class="col" style="margin-left: 8px">Perfect</div>
+                                    </div>
+                                </div>
+                                <div class="upload-item" *ngFor="let file of files; let i = index;">
+
+                                    <div class="row">
+                                        <div class="filename col-6 small d-flex">
+                                            <b class="my-auto mr-1">{{ file.name }}</b>
+                                            <span class="my-auto error ml-2" [style.display]="file.responseStatus?'flex':'none'">
+                                                {{file.metadata?.seconds}} seconds
+                                                </span>
+                                            <div class="col mt-auto mb-auto align-items-center d-flex">
+                                                <div class="col progress pull-right"  [style.display]="file.responseStatus?'none':'flex'">
+                                                    <span class="bar" [style.width]="file?.progress?.data?.percentage + '%'" [style.background-color]="file.responseStatus?'rgb(23, 112, 232)':'rgb(141, 151, 146)'"></span>
+                                                </div>
+                                            </div>
+                                            <!--<span class="mx-auto pull-right">Uploaded</span>-->
+                                        </div>
+                                        <div class="col-6 mt-auto mb-auto align-items-center d-flex">
+
+
+                                            <!--<div class="col progress pull-right"  [style.display]="file.responseStatus?'none':'flex'">-->
+                                            <!--<span class="bar" [style.width]="file?.progress?.data?.percentage + '%'" [style.background-color]="file.responseStatus?'rgb(23, 112, 232)':'rgb(141, 151, 146)'"></span>-->
+                                            <!--</div>-->
+                                            <form class="" style="display: flex; align-items: center;">
+                                                <label for="" class="radio-inline m-0">
+                                                    <span class=" pull-right small"><b>&nbsp; {{file.amount_perfect}}</b> € {{file.metadata?.amount_perfect}},- <input [disabled]="file.progress?.status != 2" style="vertical-align: sub" id="{{file.id}}-perfect" type="radio" name="optradio" value="perfect" #perfect [checked]="file.metadata?.isPerfect" (change)="calculateOrderWithOptions(file,perfect.value)"></span>
+                                                    <span class="mr-1 mr-sm-3 pull-right small"><b>&nbsp;{{file.amount}}</b> € {{file.metadata?.amount}},- <input [disabled]="file.progress?.status != 2" style="vertical-align: sub" id="{{file.id}}-raw" type="radio" name="optradio" value="raw" #raw checked [checked]="!file.metadata?.isPerfect" (change)="calculateOrderWithOptions(file,raw.value)"></span>
+                                                </label> &nbsp;
+                                            </form>
+                                            <span class="row mx-1 ml-1 pull-right">
+                                                <!--<button style="text-transform: none; padding: 15px; margin-top: auto;" type="button" class="btn btn-outline-danger btn-sm pull-right small p-0" id="removeBtnStepTwo" (click)="removeFileFromList(file,file.id)"-->
+                                                <!--[disabled]="file.progress?.status != 2">Remove</button>-->
+
+                                                <button style="text-transform: none;margin-right: -8px; padding: 15px; margin-left: 7px; width: 20px" type="button" class="btn btn-outline-danger btn-sm justify-content-end small p-0" id="removeBtnStepTwo" (click)="removeFileFromList(file,file.id)">
+                                                    <span style="letter-spacing: 0px;" aria-hidden="true">&times;</span>
+                                                </button>
+
+                                            </span>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row pull-left small d-flex h-25" style="justify-content: space-evenly;">
+                                        <div class="col-md-6"></div>
+                                        <span class="col text-left">
+                                                <span class="error" *ngIf="file.responseStatus >= 400">{{file.error}}</span>
+                                            <!--<span class="error" *ngIf="file.responseStatus < 400">-->
+                                            <!--Duration: {{file.metadata?.seconds}} seconds-->
+                                            <!--</span>-->
+                                            <!--<span *ngIf="file.progress?.status != 2">{{ file.progress?.data?.percentage }}%</span>-->
+                                            <!--<span class="file-metadata" *ngIf="file.progress?.status != 2">ETA {{ file.progress?.data?.etaHuman }}</span>-->
+                                            </span>
+                                    </div>
+
+                                </div>
+                                <hr *ngIf="files.length!=0">
+                            </div>
+                            <!--<div *ngIf="uploadDone" class="container col mx-auto">-->
+                            <!--<div style="margin-bottom:4px;" class="row m-auto small justify-content-between" *ngFor="let file of files">-->
+                            <!--&lt;!&ndash;<div class="col-md-4 mx-auto text-sm-left mr-3 mt-auto mb-auto align-middle"></div>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<div class="col-md-4 mx-auto ml-3 mt-auto mb-auto align-middle">&ndash;&gt;-->
+                            <!--<span class=""><b>{{file.name}} : </b></span>-->
+                            <!--<form class="">-->
+                            <!--<label for="" class="radio-inline m-0">-->
+                            <!--<span class=" pull-right"><b>&nbsp; Perfect {{file.amount_perfect}}</b> | cost: € {{file.metadata?.amount_perfect}},- <input style="vertical-align: text-top;" id="{{file.id}}-perfect" type="radio" name="optradio" value="perfect" #perfect [checked]="file.metadata?.isPerfect" (change)="calculateOrderWithOptions(file,perfect.value)"></span>-->
+                            <!--<span class="mr-1 mr-sm-3 pull-right"><b>&nbsp; Raw {{file.amount}}</b> | cost: € {{file.metadata?.amount}},- <input style="vertical-align: text-top;" id="{{file.id}}-raw" type="radio" name="optradio" value="raw" #raw checked [checked]="!file.metadata?.isPerfect" (change)="calculateOrderWithOptions(file,raw.value)"></span>-->
+                            <!--</label> &nbsp;-->
+                            <!--</form>-->
+
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+
+
+
+    <div *ngIf="files!=0" class="mb-1 container col mx-auto">
+
+        <div class="col text-right">
+            <h6 class="mb-0" style="font-size: 13px !important;">Service fee &nbsp; &euro; 1,- </h6>
+        </div>
+    </div>
+
+    <div *ngIf="amountAutomatic!=0" class="container col mx-auto">
+        <div class="col text-right flex-nowrap">
+            <h6 class="mb-0" style="font-size: 13px !important;">Automatic transcription &nbsp; &euro; {{amountAutomatic}},- </h6>
+        </div>
+    </div>
+
+    <div *ngIf="amountPerfect!=0" class="container col mx-auto">
+        <div class="col text-right flex-nowrap">
+            <h6 class="mb-0" style="font-size: 13px !important;">Perfect transcription &nbsp; &euro; {{amountPerfect}},- </h6>
+        </div>
+    </div>
+
+    <div *ngIf="files!=0" class="mt-1 container col mx-auto ">
+        <div class="col text-right">
+            <h6 class="mb-0" style="font-size: 13px !important;"><b>Total &nbsp;  </b>&euro; {{orderTotal}},-</h6>
+        </div>
+    </div>
+
+    <!--<div class="row mt-3">-->
+    <!--&lt;!&ndash;<div class="col-md-8 text-right">&ndash;&gt;-->
+    <!--&lt;!&ndash;<span style="display: inline-flex;">&ndash;&gt;-->
+    <!--&lt;!&ndash;<h5>&ndash;&gt;-->
+    <!--&lt;!&ndash;Include our <abbr title="A highly accurate service to transcribe your files.">advanced transcribing system</abbr> &nbsp;&ndash;&gt;-->
+    <!--&lt;!&ndash;</h5>&ndash;&gt;-->
+    <!--&lt;!&ndash;<label style="display: flex;margin: 3px;">&ndash;&gt;-->
+    <!--&lt;!&ndash;<input (change)="includePerfect()" style="width: 20px;height: 20px;" type="checkbox" value="">&ndash;&gt;-->
+    <!--&lt;!&ndash;</label>&ndash;&gt;-->
+    <!--&lt;!&ndash;</span>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--<div *ngIf="perfectTranscriptionSelection" class="col-md-4 text-right">-->
+    <!--<h5><mark>+2&euro; ( total: 3 &euro; ) </mark></h5>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <div *ngIf="files.length==0">
+        <p class="margin-0 text-muted text-center">
+            <small>You currently have no uploaded files.</small>
+        </p>
+    </div>
+    <div *ngIf="!account.billing">
+        <hr>
+
+        <div class="alert alert-info">
+            <p class="margin-0 text-muted text-center">
+                <small>You don't have any billing details saved. Do that in the "Settings" page</small>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-body" *ngIf="billingDetailsDisplayed">
+
+    <div class="alert alert-info">
+        This is a one-time step. We need your billing details to generate the receipt for your purchase.
+    </div>
+
+    <form [formGroup]="billingForm" class="form-horizontal" role="form" (ngSubmit)="saveBillingAndRedirectToMollie(billingForm.value)">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input formControlName="firstName" type="text" class="form-control" id="" placeholder="Enter first name">
+
+            <div class="alert alert-danger" *ngIf="!billingForm.controls['firstName'].valid && billingForm.controls['lastName'].touched">Please enter a valid name</div>
+
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input formControlName="lastName" type="text" class="form-control" id="" placeholder="Enter last name">
+            <div class="alert alert-danger" *ngIf="!billingForm.controls['lastName'].valid && !billingForm.controls['lastName'].value && billingForm.controls['lastName'].touched">Please enter a valid name</div>
+        </div>
+
+        <div class="form-group">
+            <label for="street">Street</label>
+            <input formControlName="street" type="text" class="form-control" id="" placeholder="Enter street name">
+            <div class="alert alert-danger" *ngIf="!billingForm.controls['street'].valid && billingForm.controls['street'].touched">Please enter a valid street name</div>
+        </div>
+
+        <div class="form-group">
+
+            <label for="city">City</label>
+            <input formControlName="city" type="text" class="form-control" id="" placeholder="Enter city name">
+            <div class="alert alert-danger" *ngIf="!billingForm.controls['city'].valid && billingForm.controls['city'].touched">Please enter a valid city name</div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input formControlName="country" type="text" class="form-control" id="" placeholder="Enter country name">
+            <div class="alert alert-danger" *ngIf="!billingForm.controls['country'].valid && billingForm.controls['country'].touched">Please enter a valid country name</div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input formControlName="email" type="email" class="form-control" id="" placeholder="Enter email name">
+            <div class="alert alert-danger" *ngIf="!billingForm.controls['email'].valid && billingForm.controls['email'].touched">Please enter a valid email</div>
+        </div>
+
+    </form>
+</div>
+
+
+<div class="modal-footer" *ngIf="!billingDetailsDisplayed">
+    <button [hidden]="files.length==0" style="background-color:#1770e8" type="button" class="zsBtn w-50 mx-auto btn text-white p-1" (click)="getPaymentLink()" [disabled]="files.length==0 || !uploadDone || !account.billing"
+            *ngIf="account.billing">
+        Payment
+    </button>
+    <button type="button" class="btn zsBtn btn-primary btn-block btn-lg" (click)="proceedToBillingForm()" [disabled]="!files.length || !uploadDone"
+            *ngIf="!account.billing">
+        Proceed to billing details
+    </button>
+</div>
+
+<div class="modal-footer" *ngIf="billingDetailsDisplayed">
+    <button type="button" class="btn btn-primary btn-block btn-lg" (click)="saveBillingAndRedirectToMollie(billingForm.value)"
+            [disabled]="!billingForm.valid">
+        Save and Proceed to Payment
+    </button>
+</div>

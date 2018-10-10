@@ -1,0 +1,131 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+    <a class="navbar-brand" href="#">
+        <img src="/assets/img/zoom-script-logo.png" class="img-fluid navbar-logo">
+    </a>
+</nav>
+
+<div class="alert alert-danger" *ngIf="showError">
+    There was a problem processing your request
+</div>
+
+
+<div class="audio-player-wrapper">
+    <audio height=30 width="100%" id="audio-player"
+           class="azuremediaplayer amp-default-skin amp-big-play-centered azure-fixed"
+           tabindex="0"></audio>
+</div>
+
+
+<div class="container">
+
+    <div *ngIf="fileData; else loading">
+
+
+        <div class="row justify-content-center text-center">
+            <div class="col-md-6 ">
+                <h3>{{fileData.files?.metadata?.filename}}
+                </h3>
+                <h6>Processed on: {{fileData.createdAt | amDateFormat:'DD-MM-YYYY HH:mm'}}</h6>
+                <h6>Duration: {{fileData.files?.metadata?.durationInSeconds}} seconds</h6>
+            </div>
+
+        </div>
+
+        <ul class="list-group list-group-flush mt-5">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-2  text-right">
+                        <b>Speaker</b>
+                    </div>
+                    <div class="col-md-8">
+                        <b>Transcript</b>
+                    </div>
+                </div>
+
+            </li>
+            <li class="list-group-item" *ngFor="let item of results; let index = index;">
+                <div class="row">
+                    <div class="col-md-2  text-right">
+                        <p class="margin-0">
+                            <small>&nbsp;</small>
+                        </p>
+
+                        <span *ngIf="item.speaker === 'unk'" [(contenteditableModel)]="item.speaker"
+                              >Unknown</span>
+                        <span *ngIf="item.speaker !== 'unk'" [(contenteditableModel)]="item.speaker"
+                              >{{item.speaker}}</span>
+                    </div>
+                    <div class="col-md-10">
+                        <p class="text-muted margin-0">
+                            <small>{{item?.startTime | formatPlayerTime}}</small>
+                        </p>
+                        <div *ngIf="item.text; else isMusic">
+
+
+                            <p class="margin-0" lang="nl">
+
+
+                            <span *ngFor="let word of item.result">
+
+                                <span [ngClass]="{
+                                        'current-word': (playerCurrentTime > word.start && playerCurrentTime < word.end)
+                                    }">
+                                    <span>{{word.word}}</span>
+                                </span>
+
+                            </span>
+                            </p>
+                        </div>
+                        <!-- <p class="text-muted margin-0">
+                            <small> {{item?.endTime | formatPlayerTime}}</small>
+                        </p> -->
+
+
+                        <ng-template #isMusic>
+                            <code>music</code>
+                        </ng-template>
+                    </div>
+                </div>
+                <!-- <div class="media">
+                    <div class="media-left align-self-start mx-3">
+
+                    </div>
+                    <div class="media-left align-self-start mx-3">
+
+                        <span *ngIf="item.speaker === 'unk'">Unknown</span>
+                        <span *ngIf="item.speaker ==! 'unk'">{{item.speaker}}</span>
+                    </div>
+                    <div class="media-body  mx-3">
+                        <p class="margin-0" *ngIf="item.text; else isMusic" lang="nl">
+
+                            <span *ngFor="let word of item.result; let index = index; trackBy:trackByIndex">
+
+                                <span contenteditable="true" [(contenteditableModel)]="item.result[index]" [ngClass]="{
+                                    'badge': (word.confidence < 0.9 || word.confidence >1),
+                                    'badge-danger': word.confidence < 0.7,
+                                    'badge-warning': (word.confidence >= 0.7  && word.confidence < 0.9),
+                                    'badge-success': word.confidence > 1,
+                                    'current-word': (playerCurrentTime > word.start && playerCurrentTime < word.end)
+                                }" (click)="onWordClick(word)">
+                                    {{word.word}}
+                                </span>
+
+                            </span>
+                        </p>
+
+                        <ng-template #isMusic>
+                            <code>music</code>
+                        </ng-template>
+                    </div>
+                </div> -->
+            </li>
+        </ul>
+
+
+    </div>
+</div>
+
+
+<ng-template #loading>
+    Loading..
+</ng-template>

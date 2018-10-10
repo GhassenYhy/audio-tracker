@@ -1,0 +1,17 @@
+#removeBtn{
+    float: right;
+}
+
+@media only screen and (max-width: 767px) {
+    .spacer {
+        display: none;
+    }
+}
+
+.progress{
+    border-radius: 0px;
+}
+
+.drop-container{
+    border-radius: 0px;
+}

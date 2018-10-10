@@ -1,0 +1,9 @@
+#shortcutsTrigger:hover {
+    color: dodgerblue !important;
+}
+
+#shortcutsTrigger {
+    color: #71b1d1 !important;
+    font-size: medium !important;
+    margin-top: 60px !important;
+}

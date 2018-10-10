@@ -1,0 +1,83 @@
+<h2>
+    User Settings
+</h2>
+
+<hr>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <form [formGroup]="rForm" class="form-horizontal" role="form" (ngSubmit)="updateContactDetails(rForm.value)">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input formControlName="firstName" type="text" class="form-control" id="" placeholder="Enter first name">
+
+                <div class="alert alert-danger" *ngIf="!rForm.controls['firstName'].valid">Please enter a valid name</div>
+
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input formControlName="lastName" type="text" class="form-control" id="" placeholder="Enter last name">
+
+                <div class="alert alert-danger" *ngIf="!rForm.controls['lastName'].valid && !rForm.controls['lastName'].value">Please enter a valid name</div>
+
+
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <form [formGroup]="billingForm" class="form-horizontal" role="form" (ngSubmit)="updateBillingDetails(billingForm.value)">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input formControlName="firstName" type="text" class="form-control" id="" placeholder="Enter first name">
+
+                <div class="alert alert-danger" *ngIf="!billingForm.controls['firstName'].valid && billingForm.controls['lastName'].touched">Please enter a valid name</div>
+
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input formControlName="lastName" type="text" class="form-control" id="" placeholder="Enter last name">
+                <div class="alert alert-danger" *ngIf="!billingForm.controls['lastName'].valid && !billingForm.controls['lastName'].value && billingForm.controls['lastName'].touched">Please enter a valid name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="street">Street</label>
+                <input formControlName="street" type="text" class="form-control" id="" placeholder="Enter street name">
+                <div class="alert alert-danger" *ngIf="!billingForm.controls['street'].valid && billingForm.controls['street'].touched">Please enter a valid street name</div>
+            </div>
+
+            <div class="form-group">
+
+                <label for="city">City</label>
+                <input formControlName="city" type="text" class="form-control" id="" placeholder="Enter city name">
+                <div class="alert alert-danger" *ngIf="!billingForm.controls['city'].valid && billingForm.controls['city'].touched">Please enter a valid city name</div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="country">Country</label>
+                <input formControlName="country" type="text" class="form-control" id="" placeholder="Enter country name">
+                <div class="alert alert-danger" *ngIf="!billingForm.controls['country'].valid && billingForm.controls['country'].touched">Please enter a valid country name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input formControlName="email" type="email" class="form-control" id="" placeholder="Enter email name">
+                <div class="alert alert-danger" *ngIf="!billingForm.controls['email'].valid && billingForm.controls['email'].touched">Please enter a valid email</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+
+
+
+    </div>
+</div>
